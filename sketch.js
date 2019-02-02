@@ -59,11 +59,10 @@ function touchEnded() {
   pressed = false;
 }
 
-/*
 function mousePressed() {
   bird.up();
 }
-*/
+
 function showScore(bird) {
   var label = "Score: "+bird.score;
   fill(0,255,0);
