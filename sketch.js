@@ -42,13 +42,13 @@ function draw() {
     pipes.push(new Pipe());
   }
 }
-
+/*
 function keyPressed() {
   if(key == ' ') {
     bird.up();
   }
 }
-
+*/
 function touchStarted() {
   if(!pressed){
     bird.up();
