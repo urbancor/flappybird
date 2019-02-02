@@ -52,9 +52,6 @@ function mousePressed() {
   bird.up();
 }
 
-function touchStarted() {
-  bird.up();
-}
 
 function showScore(bird) {
   var label = "Score: "+bird.score;
