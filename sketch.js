@@ -48,11 +48,15 @@ function keyPressed() {
   }
 }
 
-function mousePressed() {
+function touchStarted() {
   bird.up();
 }
 
-
+/*
+function mousePressed() {
+  bird.up();
+}
+*/
 function showScore(bird) {
   var label = "Score: "+bird.score;
   fill(0,255,0);
