@@ -3,7 +3,7 @@ function Pipe() {
     this.spacing = 80;
     this.centery = random(this.spacing, height-this.spacing);
     this.top = this.centery - this.spacing/2;
-    this.bottom = height - this.top - this.spacing;//this.top + this.spacing;
+    this.bottom = height - this.top - this.spacing;
     this.x = width;
     this.w = 40;
     this.speed = 3;
@@ -16,15 +16,6 @@ function Pipe() {
             }
         }
         return false;
-        /*if(this.bottom*this.bottom+this.x*this.x <= (bird.x+bird.size)*(bird.x+bird.size)+(bird.y+bird.size)*(bird.y+bird.size) &&
-           this.bottom*this.bottom+this.x*this.x <= (bird.x-bird.size)*(bird.x-bird.size)+(bird.y-bird.size)*(bird.y-bird.size) &&
-           this.bottom*this.bottom+(this.x+this.w)*(this.x+this.w) <= (bird.x+bird.size)*(bird.x+bird.size)+(bird.y+bird.size)*(bird.y+bird.size) &&
-           this.bottom*this.bottom+(this.x+this.w)*(this.x) <= (bird.x-bird.size)*(bird.x-bird.size)+(bird.y-bird.size)*(bird.y-bird.size)
-        )  {
-            return true;
-        } else {
-            return false;
-        }*/
     }
 
     this.show = function() {

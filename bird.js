@@ -42,7 +42,7 @@ function Bird() {
         this.speed = 0;
         this.y = height*2;
 
-        var label = "Your sore is: "+this.score;
+        var label = "Your score is: "+this.score;
 
         fill(100, 100, 100);
         textSize(32);
