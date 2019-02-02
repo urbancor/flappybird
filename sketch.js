@@ -43,9 +43,17 @@ function draw() {
 }
 
 function keyPressed() {
-  if(key == ' ' || touchIsDown) {
+  if(key == ' ') {
     bird.up();
   }
+}
+
+function mousePressed() {
+  bird.up();
+}
+
+function touchStarted() {
+  bird.up();
 }
 
 function showScore(bird) {
