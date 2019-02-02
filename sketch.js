@@ -1,5 +1,6 @@
 var bird;
 var pipes = [];
+var pressed = false;
 
 function setup() {
   createCanvas(400, 600);
@@ -49,8 +50,13 @@ function keyPressed() {
 }
 
 function touchStarted() {
-  bird.up();
-  return false;
+  if(!pressed){
+    bird.up();
+    pressed = true;
+  }
+}
+function touchEnded() {
+  pressed = false;
 }
 
 /*
