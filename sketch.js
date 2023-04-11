@@ -47,6 +47,12 @@ function keyPressed() {
   if(key == ' ') {
     bird.up();
   }
+  if (key == 'r') {
+    bird = new Bird();
+    pipes = [];
+    pipes.push(new Pipe());
+    loop();
+  }
 }
 
 function touchStarted() {

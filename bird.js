@@ -9,12 +9,12 @@ function Bird() {
 
     this.score = 0;
 
-    var img = loadImage('bird_1.png')
+    var img = loadImage('./bird_1.png')
 
     this.show = function(){
-        /*fill(255);
-        ellipse(this.x, this.y, this.size, this.size);*/
-        image(img, this.x, this.y);
+        fill(255);
+        ellipse(this.x, this.y, this.size, this.size);
+        //image(img, this.x, this.y);
 
     }
 
