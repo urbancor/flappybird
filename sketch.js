@@ -38,7 +38,10 @@ function draw() {
   bird.show();
   showScore(bird);
 
-  if(frameCount % 100 == 0){
+  /*if(frameCount % 100 == 0){
+    pipes.push(new Pipe());
+  }*/
+  if (pipes[pipes.length-1].x < width/2) {
     pipes.push(new Pipe());
   }
 }
@@ -48,6 +51,8 @@ function keyPressed() {
     bird.up();
   }
   if (key == 'r') {
+    if (bird.dead == false) return;
+    background(0);
     bird = new Bird();
     pipes = [];
     pipes.push(new Pipe());

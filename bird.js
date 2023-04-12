@@ -8,6 +8,7 @@ function Bird() {
     this.velocity = 0;
 
     this.score = 0;
+    this.dead = false;
 
     var img = loadImage('./bird_1.png')
 
@@ -41,6 +42,7 @@ function Bird() {
     this.die = function(){
         this.speed = 0;
         this.y = height*2;
+        this.dead = true;
 
         var label = "Your score is: "+this.score;
 
