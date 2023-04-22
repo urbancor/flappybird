@@ -1,7 +1,7 @@
 function Bird() {
     this.y = height/2;
     this.x = 70;
-    this.size = 25;
+    this.size = 24;
 
     this.gravity = 1;
     this.lift = 20;
@@ -10,12 +10,12 @@ function Bird() {
     this.score = 0;
     this.dead = false;
 
-    var img = loadImage('./bird_1.png')
+    //var img = loadImage('bird_1.png')
 
     this.show = function(){
         fill(255);
         ellipse(this.x, this.y, this.size, this.size);
-        //image(img, this.x, this.y);
+        //image(img, this.x-this.size, this.y-this.size);
 
     }
 
@@ -41,7 +41,7 @@ function Bird() {
 
     this.die = function(){
         this.speed = 0;
-        this.y = height*2;
+        //this.y = height*2;
         this.dead = true;
 
         var label = "Your score is: "+this.score;

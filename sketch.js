@@ -3,6 +3,7 @@ var pipes = [];
 var pressed = false;
 
 function setup() {
+  var img = loadImage('./bird_1.png')
   createCanvas(400, 600);
   bird = new Bird();
   pipes.push(new Pipe());
