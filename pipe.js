@@ -31,7 +31,7 @@ function Pipe() {
                 return true
             }
         }
-        if ((bird.y < this.top && bird.x+bird.size/2 > this.x && bird.x + bird.size/2 < this.x) || (bird.y > height - this.bottom && bird.x + bird.size/2 > this.x && bird.x + bird.size/2 < this.x + this.w)) {
+        if ((bird.y < this.top && bird.x+bird.size/2 > this.x && bird.x + bird.size/2 < this.x + this.w) || (bird.y > height - this.bottom && bird.x + bird.size/2 > this.x && bird.x + bird.size/2 < this.x + this.w)) {
             return true
         }
         if ((Math.pow((this.x - bird.x), 2) + Math.pow((this.top - bird.y), 2) < Math.pow(bird.size/2, 2)) || (Math.pow((this.x - bird.x), 2) + Math.pow((height-this.bottom - bird.y), 2) < Math.pow(bird.size/2, 2))) {

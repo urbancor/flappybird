@@ -4,7 +4,7 @@ var pressed = false;
 
 function setup() {
   var img = loadImage('./bird_1.png')
-  createCanvas(400, 600);
+  createCanvas(600, 600);
   bird = new Bird();
   pipes.push(new Pipe());
 }
@@ -48,7 +48,11 @@ function draw() {
 }
 
 function keyPressed() {
+  console.log(key)
   if(key == ' ') {
+    bird.up();
+  }
+  if (key == 'ArrowUp') {
     bird.up();
   }
   if (key == 'r') {
