@@ -6,6 +6,7 @@ function Bird() {
     this.gravity = 1;
     this.lift = 20;
     this.velocity = 0;
+    this.gravity_y = 0.9;
 
     this.score = 0;
     this.dead = false;
@@ -22,7 +23,7 @@ function Bird() {
     this.update = function() {
         this.velocity += this.gravity;
         this.y += this.velocity;
-        this.velocity *= 0.9;
+        this.velocity *= this.gravity_y;
 
 
         if(this.y > height){
@@ -37,6 +38,9 @@ function Bird() {
     
     this.up = function() {
         this.velocity -= this.lift;
+        if (this.velocity < -50) {
+            this.velocity = -50;
+        }
     }
 
     this.die = function(){
@@ -61,6 +65,4 @@ function Bird() {
         textSize(32);
         text(sc, 0,0);
     }
-
-
 }
