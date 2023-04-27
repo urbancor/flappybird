@@ -13,6 +13,14 @@ function setup() {
   agent.init();
 }
 
+function reset() {
+  background(0);
+  bird = new Bird();
+  pipes = [];
+  pipes.push(new Pipe());
+  loop();
+}
+
 function draw() {
   
   background(0);
@@ -44,6 +52,7 @@ function draw() {
     if(pipes[i].hits(bird) || bird.y == height) {
       bird.die();
       noLoop();
+      setTimeout(reset, 200);
     }
 
   }

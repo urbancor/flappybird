@@ -10,7 +10,7 @@ function Agent() {
     this.q_table = {};
     this.alpha;
     this.actions = [FLAP, NO_FLAP];
-    this.learning_rate = 0.1;
+    this.learning_rate = 0.5;
     this.discount_factor = 0.99;
     this.epsilon = 0.1;
 
