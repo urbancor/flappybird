@@ -71,7 +71,7 @@ function draw() {
     if(pipes[i].x+pipes[i].w < bird.x-bird.size){
       if(!pipes[i].count){
         bird.increaseScore();
-        agent.updateQTable(false, bird.score);
+        //agent.updateQTable(false, bird.score);
         //agent.updateLearningRate();
         //agent.updateEpsilon();
         cum_reward += 200;
@@ -105,8 +105,8 @@ function draw() {
       if (tries % 100 == 0) {
         agent.updateEpsilon();
       }
-      if (tries % 100 == 0) {
-        //agent.updateLearningRate();
+      if (tries % 15 == 0) {
+        //agent.updateQTable(true, bird.score);
       }
       scores.push(bird.score);
       bird = new Bird();

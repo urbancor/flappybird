@@ -1,7 +1,7 @@
 var FLAP = 1;
 var NO_FLAP = 0;
 
-const num_bins = [25, 50, 15];
+const num_bins = [25, 50, 25];
 const min_values = [0, -600, -50];
 const max_values = [600, 600, 30];
 const num_actions = 2;
@@ -116,7 +116,7 @@ function Agent() {
             } else if (t <= 2) {
                 currReward = -1000 + penalty;
             } else {
-                currReward = score*15 + penalty;
+                currReward = /*score*15*/0 + penalty;
             }
             console.log("currReward: " + currReward);
             this.updateQValue(this.history[i][0], this.history[i][1], currReward, this.history[i][2]);
