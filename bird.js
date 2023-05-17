@@ -1,3 +1,5 @@
+var nup = 0;
+
 function Bird() {
     this.y = height/2;
     this.x = 70;
@@ -12,7 +14,8 @@ function Bird() {
     this.dead = false;
 
     var img = loadImage('bird_1.png')
-
+    nup++;
+    console.log(nup);
     this.show = function(){
         fill(255);
         ellipse(this.x, this.y, this.size, this.size);
@@ -53,6 +56,7 @@ function Bird() {
         fill(100, 100, 100);
         textSize(32);
         text(label, width/2-100, height/2);
+        //reset();
     }
 
     this.increaseScore = function() {

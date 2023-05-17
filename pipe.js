@@ -1,6 +1,6 @@
 function Pipe() {
 
-    this.spacing = 100;
+    this.spacing = 240;
     this.centery = random(this.spacing, height-this.spacing);
     this.top = this.centery - this.spacing/2;
     this.bottom = height - this.top - this.spacing;

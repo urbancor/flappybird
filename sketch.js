@@ -2,7 +2,9 @@ var bird;
 var agent;
 var pipes = [];
 var pressed = false;
-
+var tries = 1;
+var max_score = 0;
+var cum_reward = 0;
 
 function setup() {
   var img = loadImage('./bird_1.png')
@@ -10,7 +12,7 @@ function setup() {
   bird = new Bird();
   pipes.push(new Pipe());
   agent = new Agent();
-  agent.init();
+  agent.init(false);
 }
 
 function reset() {
@@ -18,13 +20,17 @@ function reset() {
   bird = new Bird();
   pipes = [];
   pipes.push(new Pipe());
+  tries += 1;
+  //download_q_table();
   loop();
 }
 
 function draw() {
-  
+  if (agent.q_table == null) {
+    return;
+  }
   background(0);
-  if (!bird.dead) {
+  //if (!bird.dead) {
     let current_state = getState();
     let action = agent.determineAction(current_state);
     if (action == FLAP) {
@@ -32,8 +38,27 @@ function draw() {
     }
     let new_state = getState();
     let reward = getReward();
-    agent.updateQValue(current_state, action, reward, new_state);
-  } 
+    if (reward == -1000) {
+      //console.log("dead");
+    }
+    //console.log(reward);
+    //if the bird position is in between the pipes only in y direction then the penalty is +0.1 otherwise the penalty is the negative value difference in y coordinates
+    let penalty = 0;
+    if(bird.y == 0) {
+      penalty = -1000;
+    }
+    /*if (bird.y > pipes[0].top && bird.y < height-pipes[0].bottom) {
+      //console.log("in between");
+      penalty = 1;
+    } else if(bird.y == 0) {
+      penalty = -1000;
+    } else {
+      penalty = -Math.abs(bird.y - (pipes[0].top + pipes[0].bottom)/2);
+    }*/
+    //penalty = (-(new_state[0] + new_state[1]))*0.1;
+    //agent.updateQValue(current_state, action, reward, new_state);
+    agent.addToHistory(current_state, action, new_state, penalty);
+  //} 
   bird.update();
   for(var i = pipes.length-1; i >= 0; i--){
     pipes[i].show();
@@ -45,14 +70,48 @@ function draw() {
     if(pipes[i].x+pipes[i].w < bird.x-bird.size){
       if(!pipes[i].count){
         bird.increaseScore();
+        agent.updateQTable(false, bird.score);
+        //agent.updateLearningRate();
+        agent.updateEpsilon();
+        cum_reward += 200;
         pipes[i].count = true;
       }
     }
 
-    if(pipes[i].hits(bird) || bird.y == height) {
-      bird.die();
-      noLoop();
-      setTimeout(reset, 200);
+    if(pipes[i].hits(bird) || bird.y == height || bird.y == 0) {
+      //bird.die();
+      let current_state = getState();
+      let action = agent.determineAction(current_state);
+      if (action == FLAP) {
+        bird.up();
+      }
+      let new_state = getState();
+      let reward = getReward();
+      if (reward == -1000) {
+        //console.log("dead");
+      }
+      //console.log(reward);
+      //agent.updateQValue(current_state, action, reward, new_state);
+      agent.updateQTable(true, bird.score);
+      cum_reward = 0;
+      //noLoop();
+      //new_max_score = max(max_score, bird.score);
+      if (bird.score > max_score) {
+        max_score = bird.score;
+        agent.updateLearningRate();
+      }
+      tries += 1;
+      if (tries % 100 == 0) {
+        agent.updateEpsilon();
+      }
+      if (tries % 100 == 0) {
+        //agent.updateLearningRate();
+      }
+      bird = new Bird();
+      pipes = [];
+      pipes.push(new Pipe());
+      break;
+      //setTimeout(reset, 200);
     }
 
   }
@@ -60,6 +119,9 @@ function draw() {
   
   bird.show();
   showScore(bird);
+  showTries();
+  showMaxScore();
+  showLearningRate(agent.learning_rate);
 
   /*if(frameCount % 100 == 0){
     pipes.push(new Pipe());
@@ -70,7 +132,7 @@ function draw() {
 }
 
 function keyPressed() {
-  console.log(key)
+  //console.log(key)
   if(key == ' ') {
     bird.up();
   }
@@ -79,10 +141,15 @@ function keyPressed() {
   }
   if (key == 'r') {
     if (bird.dead == false) return;
-    background(0);
-    bird = new Bird();
-    pipes = [];
-    pipes.push(new Pipe());
+    reset();
+  }
+  if (key == 'd') {
+    download_q_table();
+  }
+  if (key == 's') {
+    noLoop();
+  }
+  if (key == 'p') {
     loop();
   }
 }
@@ -108,6 +175,27 @@ function showScore(bird) {
   text(label, 25,25);
 }
 
+function showTries() {
+  var label = "Tries: "+tries;
+  fill(0,255,0);
+  textSize(32);
+  text(label, 25,50);
+}
+
+function showMaxScore() {
+  var label = "Max score: "+max_score;
+  fill(0,255,0);
+  textSize(32);
+  text(label, 25,75);
+}
+
+function showLearningRate(rate) {
+  var label = "Learning rate: "+rate;
+  fill(0,255,0);
+  textSize(32);
+  text(label, 25,100);
+}
+
 var getState = function() {
   // x distance to the upcoming pipe
   // if the bird is past the pipe, then the distance is the distance to the next pipe
@@ -131,7 +219,7 @@ var getState = function() {
   let vel = bird.velocity;
 
   //distance between bottom and the top pipe
-  let pipe_distance = height-pipes[0].bottom - pipes[0].top;
+  /*let pipe_distance = height-pipes[0].bottom - pipes[0].top;*/
 
   /*const no_of_bins = 10;
 
@@ -157,12 +245,34 @@ var getState = function() {
   let pipe_distance_bin = Math.floor((pipe_distance - min_pipe_distance) / (max_pipe_distance - min_pipe_distance) * no_of_bins);
 
   return [x_distance_bin, y_distance_bin, vel_bin, pipe_distance_bin];*/
-  return [x_distance, y_distance, vel, pipe_distance];
+  return [x_distance, y_distance, vel/*, pipe_distance*/];
 }
 
 var getReward = function() {
   if (bird.dead) {
-    return -1000;
+    return -2000;
   }
-  return 15;
+  //let reward = 0;
+  /*if (bird.y > pipes[0].top && bird.y < height-pipes[0].bottom) {
+    cum_reward += 10;
+  } else {
+    //cum_reward -= 0.01;
+  }
+  //cum_reward += bird.score*50;
+  console.log(cum_reward);
+  return cum_reward;*/
+  return bird.score * 20;
+}
+
+function download_q_table() {
+  const json = JSON.stringify(agent.q_table);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'q_table.json';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 }
