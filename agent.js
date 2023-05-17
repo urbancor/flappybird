@@ -1,7 +1,7 @@
 var FLAP = 1;
 var NO_FLAP = 0;
 
-const num_bins = [25, 50, 25];
+const num_bins = [25, 50, 15];
 const min_values = [0, -600, -50];
 const max_values = [600, 600, 30];
 const num_actions = 2;

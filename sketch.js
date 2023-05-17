@@ -5,6 +5,7 @@ var pressed = false;
 var tries = 1;
 var max_score = 0;
 var cum_reward = 0;
+var scores = [];
 
 function setup() {
   var img = loadImage('./bird_1.png')
@@ -72,13 +73,13 @@ function draw() {
         bird.increaseScore();
         agent.updateQTable(false, bird.score);
         //agent.updateLearningRate();
-        agent.updateEpsilon();
+        //agent.updateEpsilon();
         cum_reward += 200;
         pipes[i].count = true;
       }
     }
 
-    if(pipes[i].hits(bird) || bird.y == height || bird.y == 0) {
+    if(pipes[i].hits(bird) || bird.y == height /*|| bird.y == 0*/) {
       //bird.die();
       let current_state = getState();
       let action = agent.determineAction(current_state);
@@ -107,6 +108,7 @@ function draw() {
       if (tries % 100 == 0) {
         //agent.updateLearningRate();
       }
+      scores.push(bird.score);
       bird = new Bird();
       pipes = [];
       pipes.push(new Pipe());
