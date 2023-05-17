@@ -6,7 +6,7 @@ function Bird() {
     this.size = 24;
 
     this.gravity = 1;
-    this.lift = 20;
+    this.lift = 10;
     this.velocity = 0;
     this.gravity_y = 0.9;
 

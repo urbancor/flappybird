@@ -26,7 +26,7 @@ function Agent() {
     this.actions = [FLAP, NO_FLAP];
     this.learning_rate = 0.9;
     this.discount_factor = 0.9;
-    this.epsilon = 0.1;
+    this.epsilon = 0.2;
 
     this.defaultAction = FLAP;
     this.no_of_updates = 0;
@@ -42,7 +42,7 @@ function Agent() {
         } else {
             console.log("Initializing agent")
             // Initialize the Q-table with zeros
-            for (let i = 0; i < Math.pow(num_bins[0], num_bins.length); i++) {
+            for (let i = 0; i < (num_bins[0] * num_bins[1] * num_bins[2]); i++) {
                 this.q_table[i] = new Array(num_actions).fill(0);
             }
         }
@@ -122,10 +122,11 @@ function Agent() {
             this.updateQValue(this.history[i][0], this.history[i][1], currReward, this.history[i][2]);
         }
         this.history = [];
+        console.log("epsilon: " + this.epsilon)
     }
 
     this.updateEpsilon = function () {
-        if (this.epsilon > 0.05) this.epsilon -= 0.025;
+        if (this.epsilon > 0.05) this.epsilon -= this.epsilon * 0.02;
     }
 
     this.updateLearningRate = function () {

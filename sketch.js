@@ -10,6 +10,7 @@ var scores = [];
 function setup() {
   var img = loadImage('./bird_1.png')
   createCanvas(600, 600);
+  frameRate(120)
   bird = new Bird();
   pipes.push(new Pipe());
   agent = new Agent();
@@ -102,7 +103,7 @@ function draw() {
         agent.updateLearningRate();
       }
       tries += 1;
-      if (tries % 100 == 0) {
+      if (tries % 50 == 0) {
         agent.updateEpsilon();
       }
       if (tries % 15 == 0) {
