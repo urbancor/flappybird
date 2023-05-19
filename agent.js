@@ -1,9 +1,9 @@
 var FLAP = 1;
 var NO_FLAP = 0;
 
-const num_bins = [25, 50, 25];
-const min_values = [0, -600, -50];
-const max_values = [600, 600, 30];
+const num_bins = [100, 160, 80];
+const min_values = [0, -600 +240, -50];
+const max_values = [600-70, 600, 30];
 const num_actions = 2;
 
 function load_q_table_from_file(file) {
@@ -24,8 +24,8 @@ function load_q_table_from_file(file) {
 function Agent() {
     this.q_table = {};
     this.actions = [FLAP, NO_FLAP];
-    this.learning_rate = 0.9;
-    this.discount_factor = 0.9;
+    this.learning_rate = 0.95;
+    this.discount_factor = 0.95;
     this.epsilon = 0.2;
 
     this.defaultAction = FLAP;
@@ -49,8 +49,25 @@ function Agent() {
         //console.log(this.q_table)
     }
 
+    // Get the index of the state in the Q-table
     function get_state_index(state) {
-        //console.log(state)
+        let index = 0;
+        let tmp = 1;
+        for (let i = 0; i < state.length; i++) {
+            if ((state[i] - min_values[i]) < 0) {
+                console.log("State out of bounds: " + state[i] + " < " + min_values[i] + " in dimension " + i);
+            }
+            let bin = Math.floor(((state[i] - min_values[i]) / (max_values[i] - min_values[i])) * num_bins[i]);
+            //console.log("bin: " + bin);
+            if (i > 0) {
+                tmp *= num_bins[i - 1];
+            }
+            index += bin * tmp;
+        }
+        return index;
+    }
+
+    /*function get_state_index(state) {
         let index = 0;
         for (let i = 0; i < state.length; i++) {
             if ((state[i] - min_values[i]) < 0) {
@@ -62,7 +79,7 @@ function Agent() {
         }
         //console.log(index)
         return index;
-    }
+    }*/
     // Update the Q-value for a given state-action pair
     this.updateQValue = function (state, action, reward, next_state) {
         let current_state_index = get_state_index(state);
