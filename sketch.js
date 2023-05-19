@@ -72,8 +72,7 @@ function draw() {
     if(pipes[i].x+pipes[i].w < bird.x-bird.size){
       if(!pipes[i].count){
         bird.increaseScore();
-        agent.updateQTable(false, bird.score)
-        //agent.updateQTable(false, bird.score);
+        agent.updateQTable(false, bird.score);
         //agent.updateLearningRate();
         //agent.updateEpsilon();
         cum_reward += 200;
@@ -104,7 +103,7 @@ function draw() {
         agent.updateLearningRate();
       }
       tries += 1;
-      if (tries % 25 == 0) {
+      if (tries % 50 == 0) {
         agent.updateEpsilon();
       }
       if (tries % 15 == 0) {
@@ -114,6 +113,7 @@ function draw() {
       bird = new Bird();
       pipes = [];
       pipes.push(new Pipe());
+      showChart();
       break;
       //setTimeout(reset, 200);
     }
@@ -198,6 +198,25 @@ function showLearningRate(rate) {
   textSize(32);
   text(label, 25,100);
 }
+
+// chart data from scores to ctx chart
+function showChart() {
+  var ctx = document.getElementById("myChart").getContext('2d');
+  var chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: scores,
+      datasets: [{
+        label: 'Scores',
+        backgroundColor: 'rgb(255, 99, 132)',
+        borderColor: 'rgb(255, 99, 132)',
+        data: scores,
+      }]
+    },
+    options: {}
+  });
+}
+
 
 var getState = function() {
   // x distance to the upcoming pipe

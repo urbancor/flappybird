@@ -1,7 +1,7 @@
 var FLAP = 1;
 var NO_FLAP = 0;
 
-const num_bins = [100, 100, 30];
+const num_bins = [200, 200, 30];
 const min_values = [0, -600, -50];
 const max_values = [600, 600, 30];
 const num_actions = 2;
@@ -144,11 +144,12 @@ function Agent() {
             this.updateQValue(this.history[i][0], this.history[i][1], currReward, this.history[i][2], i);
         }
         this.history = [];
-        console.log("epsilon: " + this.epsilon)
+        console.log("score: " + score);
+        console.log("epsilon: " + this.epsilon);
     }
 
     this.updateEpsilon = function () {
-        if (this.epsilon > 0.05) this.epsilon -= this.epsilon * 0.02;
+        if (this.epsilon > 0.01) this.epsilon -= 0.01;
     }
 
     this.updateLearningRate = function () {
