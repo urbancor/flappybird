@@ -217,6 +217,7 @@ var getState = function() {
 
   //The y distance to the upcoming bottom pipe
   let y_distance = height-pipes[0].bottom - bird.y;
+  //console.log(y_distance);
 
   //current velocity
   let vel = bird.velocity;

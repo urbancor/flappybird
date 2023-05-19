@@ -1,7 +1,7 @@
 var FLAP = 1;
 var NO_FLAP = 0;
 
-const num_bins = [100, 160, 80];
+const num_bins = [173, 960, 80];
 const min_values = [0, -600 +240, -50];
 const max_values = [600-70, 600, 30];
 const num_actions = 2;
@@ -127,11 +127,11 @@ function Agent() {
             let currReward = 0;
             let penalty = this.history[i][3];
             //console.log("Penalty: " + penalty);
-            if (dead) {
+            if (t <= 2) {
+                currReward = -1000 + penalty;
+            } else if (dead) {
                 currReward = -1000 + penalty;
                 dead = false;
-            } else if (t <= 2) {
-                currReward = -1000 + penalty;
             } else {
                 currReward = /*score*15*/0 + penalty;
             }
