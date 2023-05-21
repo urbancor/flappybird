@@ -6,6 +6,9 @@ var tries = 1;
 var max_score = 0;
 var cum_reward = 0;
 var scores = [];
+var avg_scores = [];
+var FLAP = 1;
+var NO_FLAP = 0;
 
 function setup() {
   var img = loadImage('./bird_1.png')
@@ -80,7 +83,7 @@ function draw() {
       }
     }
 
-    if(pipes[i].hits(bird) || bird.y == height /*|| bird.y == 0*/) {
+    if(pipes[i].hits(bird) || bird.y == height || bird.y == 0) {
       //bird.die();
       let current_state = getState();
       let action = agent.determineAction(current_state);
@@ -103,17 +106,23 @@ function draw() {
         agent.updateLearningRate();
       }
       tries += 1;
-      if (tries % 50 == 0) {
+      scores.push(bird.score);
+      var interval = 50;
+      if (tries % interval == 0) {
+        var temp = 0;
+        for (var i = scores.length-1; i >= scores.length - (interval - 1); i--) {
+          temp += scores[i];
+        }
+        avg_scores.push(temp/interval);
         agent.updateEpsilon();
+        showChart();
       }
-      if (tries % 15 == 0) {
+      if (tries % 5 == 0) {
         //agent.updateQTable(true, bird.score);
       }
-      scores.push(bird.score);
       bird = new Bird();
       pipes = [];
       pipes.push(new Pipe());
-      showChart();
       break;
       //setTimeout(reset, 200);
     }
@@ -202,15 +211,19 @@ function showLearningRate(rate) {
 // chart data from scores to ctx chart
 function showChart() {
   var ctx = document.getElementById("myChart").getContext('2d');
+  // if scores length more than 50, remove last element
+  if (avg_scores.length > 70) {
+    avg_scores.shift();
+  }
   var chart = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: scores,
+      labels: avg_scores,
       datasets: [{
-        label: 'Scores',
+        label: 'Average scores over 50 runs',
         backgroundColor: 'rgb(255, 99, 132)',
         borderColor: 'rgb(255, 99, 132)',
-        data: scores,
+        data: avg_scores,
       }]
     },
     options: {}
