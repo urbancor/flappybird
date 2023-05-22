@@ -107,7 +107,7 @@ function draw() {
       }
       tries += 1;
       scores.push(bird.score);
-      var interval = 50;
+      var interval = 10;
       if (tries % interval == 0) {
         var temp = 0;
         for (var i = scores.length-1; i >= scores.length - (interval - 1); i--) {
