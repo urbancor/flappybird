@@ -1,7 +1,7 @@
 var FLAP = 1;
 var NO_FLAP = 0;
 
-const num_bins = [25, 50, 25];
+const num_bins = [10, 20, 5];
 const min_values = [0, -600, -50];
 const max_values = [600, 600, 30];
 const num_actions = 2;
@@ -22,11 +22,22 @@ function load_q_table_from_file(file) {
 }
 
 function Agent() {
-    this.q_table = {};
-    this.actions = [FLAP, NO_FLAP];
-    this.learning_rate = 0.9;
+    this.q_table = [];
+    this.actions = [NO_FLAP, FLAP];
+    this.learning_rate = 0.91;
     this.discount_factor = 0.9;
-    this.epsilon = 0.1;
+    this.epsilon = 0;
+    this.temp_epsilon = 0;
+
+    this.button0 = document.getElementById("button0");
+    this.buttonL = document.getElementById("buttonL");
+    this.button0.addEventListener("click", () => {
+        this.temp_epsilon = this.epsilon;
+        this.epsilon = 0;
+    });
+    this.buttonL.addEventListener("click", () => {
+        this.epsilon = this.temp_epsilon;
+    });
 
     this.defaultAction = FLAP;
     this.no_of_updates = 0;
@@ -42,13 +53,26 @@ function Agent() {
         } else {
             console.log("Initializing agent")
             // Initialize the Q-table with zeros
-            for (let i = 0; i < Math.pow(num_bins[0], num_bins.length); i++) {
+            /*for (let i = 0; i < (num_bins[0] * num_bins[1] * num_bins[2]); i++) {
                 this.q_table[i] = new Array(num_actions).fill(0);
+            }*/
+            this.q_table = new Array(num_bins[0]);
+            for (let i = 0; i < num_bins[0]; i++) {
+                this.q_table[i] = new Array(num_bins[1]);
+                for (let j = 0; j < num_bins[1]; j++) {
+                    this.q_table[i][j] = new Array(num_bins[2]);
+                    for (let k = 0; k < num_bins[2]; k++) {
+                        this.q_table[i][j][k] = new Array(num_actions).fill(0);
+                    }
+                }
             }
         }
         //console.log(this.q_table)
     }
 
+
+
+    /*
     function get_state_index(state) {
         //console.log(state)
         let index = 0;
@@ -62,14 +86,25 @@ function Agent() {
         }
         //console.log(index)
         return index;
+    }*/
+    function get_state_index(state){
+        let s0 = Math.floor(((state[0] - min_values[0]) / (max_values[0] - min_values[0])) * num_bins[0]);
+        let s1 = Math.floor(((state[1] - min_values[1]) / (max_values[1] - min_values[1])) * num_bins[1]);
+        let s2 = Math.floor(((state[2] - min_values[2]) / (max_values[2] - min_values[2])) * num_bins[2]);
+
+        return [s0, s1, s2];
     }
+
     // Update the Q-value for a given state-action pair
-    this.updateQValue = function (state, action, reward, next_state) {
-        let current_state_index = get_state_index(state);
-        let current_q_value = this.q_table[current_state_index][action];
-        let max_next_q_value = Math.max(...this.q_table[get_state_index(next_state)]);
+    this.updateQValue = function (state, action, reward, next_state, iter) {
+        //let current_state_index = get_state_index(state);
+        let csi = get_state_index(state);
+        let next_csi = get_state_index(next_state);
+        let current_q_value = this.q_table[csi[0]][csi[1]][csi[2]][action]; //this.q_table[current_state_index][action];
+        let max_next_q_value = Math.max(...this.q_table[next_csi[0]][next_csi[1]][next_csi[2]]); //Math.max(...this.q_table[get_state_index(next_state)]);
         let new_q_value = current_q_value + this.learning_rate * (reward + this.discount_factor * max_next_q_value - current_q_value);
-        this.q_table[current_state_index][action] = new_q_value;
+        this.q_table[csi[0]][csi[1]][csi[2]][action] = new_q_value;
+        //console.log("new_q_value: " + this.q_table[csi[0]][csi[1]][csi[2]][action], iter);
         this.no_of_updates++;
         //console.log(this.no_of_updates);
     }
@@ -79,7 +114,9 @@ function Agent() {
         if (Math.random() < this.epsilon) {
             // Random action
             //console.log("Random")
-            var action = Math.round(Math.random());
+            var random = Math.random();
+            var action = Math.round(random);
+            //console.log("action: " + random + ", " + action);
         } else {
             // Greedy action
             //console.log("Not random")
@@ -91,10 +128,18 @@ function Agent() {
     this.greedyAction = function (state) {
         //console.log(state)
         //console.log(this.q_table)
-        let state_index = get_state_index(state);
+        //let state_index = get_state_index(state);
         //console.log(state_index)
-        let action = this.q_table[state_index].indexOf(Math.max(...this.q_table[state_index]));
-        return action;
+        let csi = get_state_index(state);
+        if (this.q_table[csi[0]][csi[1]][csi[2]][0] >= this.q_table[csi[0]][csi[1]][csi[2]][1]) {
+            print(this.q_table[csi[0]][csi[1]][csi[2]][0] + ", " + this.q_table[csi[0]][csi[1]][csi[2]][1] + " NO_FLAP")
+            return this.actions[0];
+        } else {
+            print(this.q_table[csi[0]][csi[1]][csi[2]][0] + ", " + this.q_table[csi[0]][csi[1]][csi[2]][1] + " FLAP")
+            return this.actions[1];
+        }
+        //let action = this.q_table[csi[0]][csi[1]][csi[2]].indexOf(Math.max(...this.q_table[csi[0]][csi[1]][csi[2]])); //this.q_table[state_index].indexOf(Math.max(...this.q_table[state_index]));
+        //return action;
     }
 
     this.addToHistory = function (state, action, next_state, penalty) {
@@ -102,7 +147,7 @@ function Agent() {
         this.history.push([state, action, next_state, penalty]);
     }
 
-    this.updateQTable = function (dead, score) {
+    this.updateQTable = function (dead, score = 0) {
         t = 0;
         console.log("history length: " + this.history.length)
         for (let i = this.history.length-1; i >= 0;i--) {
@@ -113,19 +158,20 @@ function Agent() {
             if (dead) {
                 currReward = -1000 + penalty;
                 dead = false;
-            } else if (t <= 2) {
-                currReward = -1000 + penalty;
+            } else if (t <= 3) {
+                currReward = ((score > 0) ? score : -1000) + penalty;
             } else {
                 currReward = /*score*15*/0 + penalty;
             }
-            console.log("currReward: " + currReward);
-            this.updateQValue(this.history[i][0], this.history[i][1], currReward, this.history[i][2]);
+            this.updateQValue(this.history[i][0], this.history[i][1], currReward, this.history[i][2], i);
         }
         this.history = [];
+        console.log("score: " + score);
+        console.log("epsilon: " + this.epsilon);
     }
 
     this.updateEpsilon = function () {
-        if (this.epsilon > 0.05) this.epsilon -= 0.025;
+        if (this.epsilon > 0.01) this.epsilon -= 0.005;
     }
 
     this.updateLearningRate = function () {
