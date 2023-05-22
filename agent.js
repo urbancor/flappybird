@@ -1,9 +1,9 @@
 var FLAP = 1;
 var NO_FLAP = 0;
 
-const num_bins = [173, 960, 80];
-const min_values = [0, -600 +240, -50];
-const max_values = [600-70, 600, 30];
+const num_bins = [173, 480, 50, 200];
+const min_values = [0, -600 +240, -20, 0];
+const max_values = [600-70, 600, 30, 600];
 const num_actions = 2;
 
 function load_q_table_from_file(file) {
@@ -24,7 +24,7 @@ function load_q_table_from_file(file) {
 function Agent() {
     this.q_table = {};
     this.actions = [FLAP, NO_FLAP];
-    this.learning_rate = 0.95;
+    this.learning_rate = 0.8;
     this.discount_factor = 0.95;
     this.epsilon = 0.2;
 
@@ -42,7 +42,7 @@ function Agent() {
         } else {
             console.log("Initializing agent")
             // Initialize the Q-table with zeros
-            for (let i = 0; i < (num_bins[0] * num_bins[1] * num_bins[2]); i++) {
+            for (let i = 0; i < (num_bins[0] * num_bins[1] * num_bins[2] * num_bins[3]); i++) {
                 this.q_table[i] = new Array(num_actions).fill(0);
             }
         }
@@ -127,7 +127,7 @@ function Agent() {
             let currReward = 0;
             let penalty = this.history[i][3];
             //console.log("Penalty: " + penalty);
-            if (t <= 2) {
+            if (t <= 1) {
                 currReward = -1000 + penalty;
             } else if (dead) {
                 currReward = -1000 + penalty;
@@ -147,7 +147,7 @@ function Agent() {
     }
 
     this.updateLearningRate = function () {
-        if (this.learning_rate > 0.4) this.learning_rate -= 0.025;
+        if (this.learning_rate > 0.4) this.learning_rate -= 0.0;
     }
 }
 

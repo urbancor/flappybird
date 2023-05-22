@@ -41,8 +41,8 @@ function Bird() {
     
     this.up = function() {
         this.velocity -= this.lift;
-        if (this.velocity < -50) {
-            this.velocity = -50;
+        if (this.velocity < -20) {
+            this.velocity = -20;
         }
     }
 

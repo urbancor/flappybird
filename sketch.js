@@ -222,6 +222,9 @@ var getState = function() {
   //current velocity
   let vel = bird.velocity;
 
+  //distance to the bottom of the screen
+  let bottom_distance = height - bird.y;
+
   //distance between bottom and the top pipe
   /*let pipe_distance = height-pipes[0].bottom - pipes[0].top;*/
 
@@ -249,7 +252,7 @@ var getState = function() {
   let pipe_distance_bin = Math.floor((pipe_distance - min_pipe_distance) / (max_pipe_distance - min_pipe_distance) * no_of_bins);
 
   return [x_distance_bin, y_distance_bin, vel_bin, pipe_distance_bin];*/
-  return [x_distance, y_distance, vel/*, pipe_distance*/];
+  return [x_distance, y_distance, vel, bottom_distance/*, pipe_distance*/];
 }
 
 var getReward = function() {
