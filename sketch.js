@@ -2,13 +2,14 @@ var bird;
 var agent;
 var pipes = [];
 var pressed = false;
-var tries = 1;
+var tries = 20;
 var max_score = 0;
 var cum_reward = 0;
 var scores = [];
 var avg_scores = [];
 var FLAP = 1;
 var NO_FLAP = 0;
+var high_scores = [];
 
 function setup() {
   var img = loadImage('./bird_1.png')
@@ -83,7 +84,7 @@ function draw() {
       }
     }
 
-    if(pipes[i].hits(bird) || bird.y == height || bird.y == 0) {
+    if(pipes[i].hits(bird) || bird.y == height/* || bird.y == 0*/) {
       //bird.die();
       let current_state = getState();
       let action = agent.determineAction(current_state);
@@ -107,7 +108,8 @@ function draw() {
       }
       tries += 1;
       scores.push(bird.score);
-      var interval = 10;
+      high_scores.push(max_score);
+      var interval = 1;
       if (tries % interval == 0) {
         var temp = 0;
         for (var i = scores.length-1; i >= scores.length - (interval - 1); i--) {
@@ -212,18 +214,23 @@ function showLearningRate(rate) {
 function showChart() {
   var ctx = document.getElementById("myChart").getContext('2d');
   // if scores length more than 50, remove last element
-  if (avg_scores.length > 70) {
-    avg_scores.shift();
+  if (scores.length > 100) {
+    scores.shift();
   }
   var chart = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: avg_scores,
+      labels: scores,
       datasets: [{
-        label: 'Average scores over 50 runs',
-        backgroundColor: 'rgb(255, 99, 132)',
-        borderColor: 'rgb(255, 99, 132)',
-        data: avg_scores,
+        label: 'scores',
+        borderColor: 'red',
+        backgroundColor: 'white',
+        data: scores,
+      },{
+        label: 'Highest Score',
+        borderColor: 'blue',
+        backgroundColor: 'white',
+        data: high_scores,
       }]
     },
     options: {}
