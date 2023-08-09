@@ -1,7 +1,9 @@
 var FLAP = 1;
 var NO_FLAP = 0;
 
-const num_bins = [10, 20, 5];
+
+const num_bins = [1, 15, 2];
+
 const min_values = [0, -600, -50];
 const max_values = [600, 600, 30];
 const num_actions = 2;
@@ -132,10 +134,10 @@ function Agent() {
         //console.log(state_index)
         let csi = get_state_index(state);
         if (this.q_table[csi[0]][csi[1]][csi[2]][0] >= this.q_table[csi[0]][csi[1]][csi[2]][1]) {
-            print(this.q_table[csi[0]][csi[1]][csi[2]][0] + ", " + this.q_table[csi[0]][csi[1]][csi[2]][1] + " NO_FLAP")
+            //console.log(this.q_table[csi[0]][csi[1]][csi[2]][0] + ", " + this.q_table[csi[0]][csi[1]][csi[2]][1] + " NO_FLAP")
             return this.actions[0];
         } else {
-            print(this.q_table[csi[0]][csi[1]][csi[2]][0] + ", " + this.q_table[csi[0]][csi[1]][csi[2]][1] + " FLAP")
+            //console.log(this.q_table[csi[0]][csi[1]][csi[2]][0] + ", " + this.q_table[csi[0]][csi[1]][csi[2]][1] + " FLAP")
             return this.actions[1];
         }
         //let action = this.q_table[csi[0]][csi[1]][csi[2]].indexOf(Math.max(...this.q_table[csi[0]][csi[1]][csi[2]])); //this.q_table[state_index].indexOf(Math.max(...this.q_table[state_index]));
@@ -150,7 +152,15 @@ function Agent() {
     this.updateQTable = function (dead, score = 0) {
         t = 0;
         console.log("history length: " + this.history.length)
+        var prev = 0;
         for (let i = this.history.length-1; i >= 0;i--) {
+            if (prev != 0){
+                if (this.history[i][0] == prev){
+                    prev = this.history[i][0];
+                    continue;
+                }
+            }
+            prev = this.history[i][0];
             t += 1;
             let currReward = 0;
             let penalty = this.history[i][3];
@@ -158,7 +168,8 @@ function Agent() {
             if (dead) {
                 currReward = -1000 + penalty;
                 dead = false;
-            } else if (t <= 3) {
+            } else if (t <= 4) {
+
                 currReward = ((score > 0) ? score : -1000) + penalty;
             } else {
                 currReward = /*score*15*/0 + penalty;
@@ -171,7 +182,7 @@ function Agent() {
     }
 
     this.updateEpsilon = function () {
-        if (this.epsilon > 0.01) this.epsilon -= 0.005;
+        if (this.epsilon > 0) this.epsilon -= 0.0001;
     }
 
     this.updateLearningRate = function () {

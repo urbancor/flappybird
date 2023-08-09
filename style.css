@@ -12,3 +12,8 @@ body {
 canvas {
     display: block;
 }
+div {
+    margin: 100;
+    padding: 100;
+    align-items: center;
+}
