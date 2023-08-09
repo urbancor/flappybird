@@ -13,8 +13,9 @@ var high_scores = [];
 
 function setup() {
   var img = loadImage('./bird_1.png')
-  createCanvas(600, 600);
-  frameRate(120)
+  var myCanvas = createCanvas(600, 600);
+  myCanvas.parent('game');
+  frameRate(120);
   bird = new Bird();
   pipes.push(new Pipe());
   agent = new Agent();
