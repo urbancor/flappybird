@@ -9,6 +9,7 @@ var scores = [];
 var avg_scores = [];
 var FLAP = 1;
 var NO_FLAP = 0;
+
 var high_scores = [];
 
 function setup() {
@@ -16,6 +17,7 @@ function setup() {
   var myCanvas = createCanvas(600, 600);
   myCanvas.parent('game');
   frameRate(120);
+
   bird = new Bird();
   pipes.push(new Pipe());
   agent = new Agent();
@@ -86,6 +88,7 @@ function draw() {
     }
 
     if(pipes[i].hits(bird) || bird.y == height/* || bird.y == 0*/) {
+
       //bird.die();
       let current_state = getState();
       let action = agent.determineAction(current_state);
@@ -109,8 +112,10 @@ function draw() {
       }
       tries += 1;
       scores.push(bird.score);
+
       high_scores.push(max_score);
       var interval = 1;
+
       if (tries % interval == 0) {
         var temp = 0;
         for (var i = scores.length-1; i >= scores.length - (interval - 1); i--) {
@@ -215,6 +220,7 @@ function showLearningRate(rate) {
 function showChart() {
   var ctx = document.getElementById("myChart").getContext('2d');
   // if scores length more than 50, remove last element
+
   if (scores.length > 100) {
     scores.shift();
   }

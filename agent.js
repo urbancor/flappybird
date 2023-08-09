@@ -1,7 +1,9 @@
 var FLAP = 1;
 var NO_FLAP = 0;
 
+
 const num_bins = [1, 15, 2];
+
 const min_values = [0, -600, -50];
 const max_values = [600, 600, 30];
 const num_actions = 2;
@@ -167,6 +169,7 @@ function Agent() {
                 currReward = -1000 + penalty;
                 dead = false;
             } else if (t <= 4) {
+
                 currReward = ((score > 0) ? score : -1000) + penalty;
             } else {
                 currReward = /*score*15*/0 + penalty;
